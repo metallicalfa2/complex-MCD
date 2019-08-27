@@ -11,7 +11,7 @@ script:
 after_success:
   # Install aws-cli 
   - docker --version
-  - pip install --user awscli # install aws cli w/o sudo
+  - pip install awscli # install aws cli w/o sudo
   - export PATH=$PATH:$HOME/.local/bin # put aws in the path
   - eval &(aws ecr get-login --no-include-email --region us-east-2)
 
