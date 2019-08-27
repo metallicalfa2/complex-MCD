@@ -9,12 +9,13 @@ script:
   - docker run -e CI=true shubham/complex npm test -- --coverage
 
 after_success:
-  # Install aws-cli 
+  # Install aws-cli and authenticate using envvars set in travis-ci
   - docker --version
   - pip install awscli # install aws cli w/o sudo
   - export PATH=$PATH:$HOME/.local/bin # put aws in the path
   - eval $(aws ecr get-login --no-include-email --region us-east-2)
 
+  # Push all the images to ECR 
   - docker build -t multiclient ./client
   - docker tag multiclient:latest 703476792259.dkr.ecr.us-east-2.amazonaws.com/multiclient:latest
   - docker push 703476792259.dkr.ecr.us-east-2.amazonaws.com/multiclient:latest
@@ -31,3 +32,16 @@ after_success:
   - docker tag multinginx:latest 703476792259.dkr.ecr.us-east-2.amazonaws.com/multinginx:latest
   - docker push 703476792259.dkr.ecr.us-east-2.amazonaws.com/multinginx:latest
 
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "multi-docker"
+  env: "MultiDocker-env"
+  bucket_name: "elasticbeanstalk-us-east-2-703476792259" 
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  access_key_id: 
+    secure: $AWS_ACCESS_KEY_ID
+  secret_access_key:
+    secure: "$AWS_SECRET_ACCESS_KEY"
