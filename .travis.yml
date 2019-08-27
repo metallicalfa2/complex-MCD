@@ -13,7 +13,7 @@ after_success:
   - docker --version
   - pip install --user awscli # install aws cli w/o sudo
   - export PATH=$PATH:$HOME/.local/bin # put aws in the path
-  - eval &(aws ecr get-login --no-include-email --region us-east-2 | sed ‘s|https://||’)
+  - eval &(aws ecr get-login --no-include-email --region us-east-2)
 
   - docker build -t multiclient ./client
   - docker tag multiclient:latest 703476792259.dkr.ecr.us-east-2.amazonaws.com/multiclient:latest
