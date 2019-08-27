@@ -3,7 +3,7 @@ services:
   - docker
 
 before_install:
-  - docker build -t shubham/complex -f Dockerfile.dev ./client
+  - docker build -t shubham/complex -f ./client/Dockerfile.dev ./client
 
 script:
   - docker run -e CI=true shubham/complex npm test -- --coverage
